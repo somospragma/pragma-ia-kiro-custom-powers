@@ -1,0 +1,16 @@
+{
+  "name": "database-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for database connections (PostgreSQL, MySQL, Oracle)",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "pg": "^8.11.3",
+    "oracledb": "^6.3.0",
+    "mysql2": "^3.6.5"
+  }
+}
