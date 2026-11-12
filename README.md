@@ -98,6 +98,16 @@ Herramientas que expone el servidor MCP:
 2. Prueba el servidor con `npm install` y `npm start` en `servers/database-mcp-server`, y el power importándolo en Kiro.
 3. Abre un pull request. Lo revisa el Backend Chapter.
 
+Cada PR, cada push a `main` y cada lunes corre el workflow **Security**:
+
+- gitleaks busca secretos en toda la historia;
+- CodeQL analiza el JavaScript y los workflows;
+- zizmor revisa las GitHub Actions;
+- `pnpm audit` revisa las dependencias del servidor MCP;
+- dependency review revisa las dependencias que agrega cada PR.
+
+Dependabot propone cada semana las actualizaciones de las acciones y de las dependencias del servidor.
+
 ## Licencia
 
 [Apache-2.0](LICENSE).

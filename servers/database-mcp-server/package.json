@@ -8,9 +8,10 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0",
-    "pg": "^8.11.3",
-    "oracledb": "^6.3.0",
-    "mysql2": "^3.6.5"
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "mysql2": "^3.24.6",
+    "oracledb": "^6.10.0",
+    "pg": "^8.23.1",
+    "zod": "^4.6.7"
   }
 }
