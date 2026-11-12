@@ -2,16 +2,11 @@
 
 ## Instalación de dependencias
 
-El power usa `mysql2` que es compatible con MySQL 5.7+ y MariaDB 10.2+.
-
-```bash
-cd database-power/server
-npm install
-```
+El power usa `mysql2`, que es compatible con MySQL 5.7+ y MariaDB 10.2+. No hay que instalar nada: `npx` descarga el servidor y sus dependencias la primera vez que arranca.
 
 ## Configuración de conexión MySQL
 
-Formato de configuración para MySQL en `mcp.json`:
+Formato de la parte MySQL de `DB_CONNECTIONS` (en `~/.kiro/settings/mcp.json`, servidor `power-pragma-database-power-database-server`):
 
 ```json
 {

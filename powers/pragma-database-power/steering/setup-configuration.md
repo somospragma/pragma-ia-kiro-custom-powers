@@ -6,7 +6,7 @@ inclusion: manual
 
 ## Tu rol en el setup
 
-Cuando el usuario te pida configurar conexiones de base de datos, debes ayudarle a convertir la configuración a formato string para el `mcp.json`.
+Cuando el usuario te pida configurar conexiones de base de datos, debes ayudarle a convertir la configuración a formato string y guardarla en `DB_CONNECTIONS` del servidor `power-pragma-database-power-database-server`, en `~/.kiro/settings/mcp.json` dentro de `powers.mcpServers`.
 
 ## Proceso paso a paso
 
@@ -69,23 +69,27 @@ const jsonString = JSON.stringify(config);
 // {"postgresql":[],"mysql":[{"name":"mysql-local","host":"localhost","port":3306,"database":"mydb","user":"root","password":"pass"}],"oracle":[]}
 ```
 
-### 4. Actualizar el mcp.json
+### 4. Actualizar `~/.kiro/settings/mcp.json`
 
-Edita el archivo `database-power/mcp.json` y actualiza la variable `DB_CONNECTIONS` con el string generado:
+Edita `~/.kiro/settings/mcp.json` y, dentro de `powers.mcpServers`, actualiza `DB_CONNECTIONS` del servidor `power-pragma-database-power-database-server` con el string generado. No cambies `command` ni `args`:
 
 ```json
 {
-  "mcpServers": {
-    "database-server": {
-      "command": "node",
-      "args": ["ruta/al/servidor"],
+  "powers": {
+    "mcpServers": {
+      "power-pragma-database-power-database-server": {
+      "command": "npx",
+      "args": ["-y", "github:somospragma/pragma-ia-kiro-custom-powers"],
       "env": {
         "DB_CONNECTIONS": "{\"postgresql\":[],\"mysql\":[{\"name\":\"mysql-local\",\"host\":\"localhost\",\"port\":3306,\"database\":\"mydb\",\"user\":\"root\",\"password\":\"pass\"}],\"oracle\":[]}"
+      }
       }
     }
   }
 }
 ```
+
+Avisa al usuario que, si actualiza el power, Kiro vuelve a escribir esta entrada y `DB_CONNECTIONS` queda vacío, así que conviene que guarde una copia.
 
 ### 5. Confirmar al usuario
 
@@ -117,7 +121,7 @@ Muestra un resumen de las conexiones configuradas y confirma que todo está list
 }
 ```
 
-2. Convertir a string y actualizar mcp.json
+2. Convertir a string y actualizar `~/.kiro/settings/mcp.json`
 3. Confirmar: "✅ Conexión MySQL 'prod-db' configurada. Puedes probarla con: 'Lista las conexiones disponibles'"
 
 ### Ejemplo 2: Usuario pide agregar otra conexión
@@ -126,11 +130,11 @@ Muestra un resumen de las conexiones configuradas y confirma que todo está list
 
 **Tu proceso:**
 
-1. Leer el mcp.json actual
+1. Leer la entrada del servidor en `~/.kiro/settings/mcp.json`
 2. Parsear el DB_CONNECTIONS existente
 3. Agregar la nueva conexión al array de postgresql
 4. Convertir todo de nuevo a string
-5. Actualizar el mcp.json
+5. Actualizar `~/.kiro/settings/mcp.json`
 6. Confirmar
 
 ### Ejemplo 3: Usuario pide ver la configuración actual
@@ -139,13 +143,13 @@ Muestra un resumen de las conexiones configuradas y confirma que todo está list
 
 **Tu proceso:**
 
-1. Leer el mcp.json
+1. Leer la entrada del servidor en `~/.kiro/settings/mcp.json`
 2. Parsear el DB_CONNECTIONS
 3. Mostrar de forma legible las conexiones (sin passwords completos por seguridad)
 
 ## Notas importantes
 
-- **Seguridad**: Advierte al usuario que no commitee el mcp.json con passwords reales
+- **Seguridad**: Advierte al usuario que no suba a ningún repositorio un `mcp.json` con passwords reales y que use un usuario de solo lectura
 - **Validación**: Verifica que los puertos sean números
 - **Formato**: Asegúrate de que el JSON esté correctamente escapado
 - **Testing**: Sugiere probar la conexión después de configurarla

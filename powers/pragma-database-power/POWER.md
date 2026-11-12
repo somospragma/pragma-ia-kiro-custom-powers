@@ -11,34 +11,28 @@ Conecta y consulta múltiples bases de datos PostgreSQL, MySQL y Oracle desde Ki
 
 ## Onboarding
 
-### Paso 1: Instalar el servidor MCP
+### Paso 1: Instalar el power
 
-Este power requiere un servidor MCP externo. Primero, instala las dependencias:
+Necesitas Node.js 18 o superior. No hace falta clonar el repositorio.
 
-```bash
-cd database-mcp-server
-npm install
+En Kiro, abre el panel **Powers** → **Add Custom Power** → **Import power from GitHub** y pega esta URL:
+
+```text
+https://github.com/somospragma/pragma-ia-kiro-custom-powers/tree/main/powers/pragma-database-power
 ```
 
-### Paso 2: Obtener la ruta absoluta del servidor
+Kiro instala el power con el nombre `pragma-database-power`.
 
-```bash
-cd database-mcp-server
-pwd
-```
+### Paso 2: Servidor MCP
 
-Copia la ruta completa que aparece. Ejemplo: `/Users/tu-usuario/projects/database-mcp-server`
-
-### Paso 3: Configurar el archivo mcp.json
-
-Edita el archivo `mcp.json` en la raíz de este power y reemplaza `/ruta/absoluta/a/database-mcp-server/index.js` con la ruta que copiaste:
+No tienes que instalar nada más. El `mcp.json` del power arranca el servidor con `npx`, que lo descarga desde GitHub e instala sus dependencias la primera vez (tarda unos segundos):
 
 ```json
 {
   "mcpServers": {
     "database-server": {
-      "command": "node",
-      "args": ["/RUTA/ABSOLUTA/QUE/COPIASTE/index.js"],
+      "command": "npx",
+      "args": ["-y", "github:somospragma/pragma-ia-kiro-custom-powers"],
       "env": {
         "DB_CONNECTIONS": "{\"postgresql\":[],\"mysql\":[],\"oracle\":[]}"
       }
@@ -46,6 +40,12 @@ Edita el archivo `mcp.json` en la raíz de este power y reemplaza `/ruta/absolut
   }
 }
 ```
+
+Kiro registra este servidor en `~/.kiro/settings/mcp.json`, dentro de `powers.mcpServers`, con el nombre `power-pragma-database-power-database-server`.
+
+### Paso 3: Revisar que el servidor esté activo
+
+En el panel **MCP Servers** de Kiro debe aparecer `power-pragma-database-power-database-server` conectado. Si sale con error, revisa que `node --version` sea 18 o superior.
 
 ### Paso 4: Configurar tus conexiones
 
@@ -60,7 +60,7 @@ database 'myapp', usuario 'root', password 'password123'"
 El agente:
 1. Creará el objeto JSON con tu configuración
 2. Lo convertirá automáticamente a string escapado
-3. Actualizará el archivo `mcp.json`
+3. Actualizará `DB_CONNECTIONS` del servidor `power-pragma-database-power-database-server` en `~/.kiro/settings/mcp.json`
 4. Te confirmará que está listo
 
 **Tipos de base de datos soportados:**
@@ -198,11 +198,12 @@ Genera un diagrama ASCII de las relaciones entre tablas de un schema.
 ## Troubleshooting
 
 ### Error: "Connection not found"
-- Verifica que la ruta en `mcp.json` sea absoluta y correcta
+- Verifica que el nombre de la conexión exista en `DB_CONNECTIONS`
 - Verifica que el formato JSON de `DB_CONNECTIONS` sea válido (debe estar en una línea)
 
-### Error: "Cannot find module"
-- Ejecuta `npm install` en la carpeta `database-mcp-server/`
+### El servidor no arranca
+- Verifica que tengas Node.js 18 o superior y acceso a github.com
+- La primera vez `npx` descarga el servidor y sus dependencias; espera unos segundos
 
 ### Error: "Connection refused"
 - Verifica que la base de datos esté corriendo
@@ -221,6 +222,8 @@ Genera un diagrama ASCII de las relaciones entre tablas de un schema.
 
 ## Notas importantes
 
-⚠️ **No commitees el archivo `mcp.json` con passwords reales**. Usa variables de entorno o archivos de configuración separados para producción.
+⚠️ **Las conexiones viven en `~/.kiro/settings/mcp.json`.** Cuando actualizas el power (**Check for updates** → **Install updates**), Kiro vuelve a escribir la entrada `power-pragma-database-power-database-server` desde el `mcp.json` del power y `DB_CONNECTIONS` queda vacío. Guarda una copia de tus conexiones antes de actualizar.
 
-⚠️ **El servidor MCP debe estar fuera del power** porque Kiro solo permite archivos específicos dentro del power (POWER.md, mcp.json, steering/*.md).
+⚠️ **No subas a ningún repositorio un `mcp.json` con passwords reales**, y usa un usuario de base de datos de solo lectura.
+
+⚠️ **El servidor MCP vive fuera del power** porque Kiro solo carga `POWER.md`, `mcp.json` y `steering/` desde la carpeta del power. `npx` lo trae desde la raíz del repositorio.
