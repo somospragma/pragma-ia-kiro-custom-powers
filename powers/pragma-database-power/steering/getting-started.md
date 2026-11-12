@@ -4,40 +4,28 @@ Esta guía te ayudará a configurar y usar Database Power para conectarte a tus 
 
 ## Instalación
 
-### Paso 1: Instalar el servidor MCP
+### Paso 1: Instalar el power
 
-El servidor MCP debe instalarse **fuera** del power:
+En Kiro: panel **Powers** → **Add Custom Power** → **Import power from GitHub** con esta URL:
 
-```bash
-cd pragma-ia-kiro-custom-powers/servers/database-mcp-server
-npm install
+```text
+https://github.com/somospragma/pragma-ia-kiro-custom-powers/tree/main/powers/pragma-database-power
 ```
 
-### Paso 2: Obtener la ruta absoluta
+No hace falta clonar el repositorio ni correr `npm install`: el `mcp.json` del power arranca el servidor con `npx -y github:somospragma/pragma-ia-kiro-custom-powers`.
 
-```bash
-pwd
-# Ejemplo: /Users/tu-usuario/projects/pragma-ia-kiro-custom-powers/servers/database-mcp-server
-```
+### Paso 2: Configurar tus conexiones
 
-### Paso 3: Configurar el power
+Pídele al agente que configure una conexión. El agente actualiza `DB_CONNECTIONS` del servidor `power-pragma-database-power-database-server` en `~/.kiro/settings/mcp.json`.
 
-1. Abre el archivo `mcp.json` en la raíz del power
-2. Reemplaza la ruta de `args` por tu ruta real, terminada en `/index.js`
-3. Edita la variable de entorno `DB_CONNECTIONS` con tus conexiones
-
-### Ejemplo para PostgreSQL:
+### Ejemplo de la entrada para PostgreSQL:
 
 ```json
-{
-  "mcpServers": {
-    "database-server": {
-      "command": "node",
-      "args": ["/Users/tu-usuario/projects/pragma-ia-kiro-custom-powers/servers/database-mcp-server/index.js"],
-      "env": {
-        "DB_CONNECTIONS": "{\"postgresql\":[{\"name\":\"local-dev\",\"host\":\"localhost\",\"port\":5432,\"database\":\"myapp_dev\",\"user\":\"postgres\",\"password\":\"dev123\"}],\"mysql\":[],\"oracle\":[]}"
-      }
-    }
+"power-pragma-database-power-database-server": {
+  "command": "npx",
+  "args": ["-y", "github:somospragma/pragma-ia-kiro-custom-powers"],
+  "env": {
+    "DB_CONNECTIONS": "{\"postgresql\":[{\"name\":\"local-dev\",\"host\":\"localhost\",\"port\":5432,\"database\":\"myapp_dev\",\"user\":\"postgres\",\"password\":\"dev123\"}],\"mysql\":[],\"oracle\":[]}"
   }
 }
 ```
@@ -56,15 +44,14 @@ Pregunta a Kiro:
 
 ## Consejos de seguridad
 
-- No commitees el `mcp.json` con passwords reales
-- Usa variables de entorno para passwords sensibles
-- Considera usar archivos de configuración separados por entorno
-- Limita los permisos del usuario de base de datos a solo lectura si es posible
+- No subas a ningún repositorio un `mcp.json` con passwords reales
+- Usa un usuario de base de datos de solo lectura
+- Al actualizar el power, Kiro reescribe la entrada del servidor: guarda una copia de tus conexiones
 
 ## Troubleshooting
 
-### Error: "Cannot find module 'pg'"
-Ejecuta `npm install` en la carpeta `server/`
+### El servidor no arranca
+Verifica que tengas Node.js 18 o superior y acceso a github.com. La primera vez `npx` descarga el servidor y sus dependencias; espera unos segundos.
 
 ### Error: "Connection refused"
 Verifica que el host y puerto sean correctos y que la base de datos esté corriendo

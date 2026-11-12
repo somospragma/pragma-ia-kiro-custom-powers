@@ -4,9 +4,13 @@ Servidor MCP para conexiones a bases de datos PostgreSQL, MySQL y Oracle.
 
 ## Instalación
 
+No se instala a mano. El power lo arranca con:
+
 ```bash
-npm install
+npx -y github:somospragma/pragma-ia-kiro-custom-powers
 ```
+
+`npx` descarga el repositorio, instala las dependencias del `package.json` de la raíz y ejecuta este `index.js`.
 
 ## Dependencias
 
@@ -79,8 +83,9 @@ Para probar el servidor localmente:
 # Configurar variable de entorno
 export DB_CONNECTIONS='{"postgresql":[{"name":"test","host":"localhost","port":5432,"database":"testdb","user":"postgres","password":"password"}],"mysql":[],"oracle":[]}'
 
-# Ejecutar servidor
-node index.js
+# Desde la raíz del repositorio
+pnpm install
+node servers/database-mcp-server/index.js
 ```
 
 El servidor se comunica a través de stdio (stdin/stdout) usando el protocolo MCP.

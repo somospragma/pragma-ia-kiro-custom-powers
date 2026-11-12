@@ -1,8 +1,11 @@
 {
   "mcpServers": {
     "database-server": {
-      "command": "node",
-      "args": ["/RUTA/ABSOLUTA/A/pragma-ia-kiro-custom-powers/servers/database-mcp-server/index.js"],
+      "command": "npx",
+      "args": [
+        "-y",
+        "github:somospragma/pragma-ia-kiro-custom-powers"
+      ],
       "env": {
         "DB_CONNECTIONS": "{\"postgresql\":[],\"mysql\":[],\"oracle\":[]}"
       },

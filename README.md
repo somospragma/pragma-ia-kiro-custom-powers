@@ -5,44 +5,24 @@ Powers de Kiro hechos en Pragma. Hoy trae uno: **Pragma Database Manager**, que 
 | Carpeta | Qué es |
 |---|---|
 | `powers/pragma-database-power/` | El power: `POWER.md`, `mcp.json` y las guías de `steering/`. Es lo que se importa en Kiro. |
-| `servers/database-mcp-server/` | El servidor MCP que usa el power. Vive fuera del power porque Kiro solo carga `POWER.md`, `mcp.json` y `steering/` desde la carpeta del power. |
+| `servers/database-mcp-server/` | El servidor MCP que usa el power. Su `package.json` está en la raíz del repositorio para que `npx` lo pueda correr desde GitHub. Vive fuera del power porque Kiro solo carga `POWER.md`, `mcp.json` y `steering/` desde la carpeta del power. |
 
 ## Instalación
 
-Necesitas [Kiro](https://kiro.dev) y Node.js 18 o superior.
+Necesitas [Kiro](https://kiro.dev) y Node.js 18 o superior. No hace falta clonar el repositorio.
 
-1. Clona el repositorio e instala las dependencias del servidor MCP:
+1. En Kiro, abre el panel **Powers** → **Add Custom Power** → **Import power from GitHub**.
+2. Pega la URL de la carpeta del power y dale **Install**:
 
-   ```bash
-   git clone https://github.com/somospragma/pragma-ia-kiro-custom-powers.git
-   cd pragma-ia-kiro-custom-powers/servers/database-mcp-server
-   npm install
-   pwd
+   ```text
+   https://github.com/somospragma/pragma-ia-kiro-custom-powers/tree/main/powers/pragma-database-power
    ```
 
-   Guarda la ruta que imprime `pwd`.
-
-2. En `powers/pragma-database-power/mcp.json`, cambia la ruta de `args` por la que guardaste, terminada en `/index.js`:
-
-   ```json
-   {
-     "mcpServers": {
-       "database-server": {
-         "command": "node",
-         "args": ["/Users/dev-user/pragma-ia-kiro-custom-powers/servers/database-mcp-server/index.js"],
-         "env": {
-           "DB_CONNECTIONS": "{\"postgresql\":[],\"mysql\":[],\"oracle\":[]}"
-         }
-       }
-     }
-   }
-   ```
-
-3. En Kiro, abre el panel **Powers** → **Add Custom Power** → **Import power from a folder** y elige la carpeta `powers/pragma-database-power`.
+Kiro lo instala como `pragma-database-power`. Su `mcp.json` arranca el servidor MCP con `npx -y github:somospragma/pragma-ia-kiro-custom-powers`, que descarga el servidor y sus dependencias la primera vez (tarda unos segundos). En el panel **MCP Servers** debe aparecer `power-pragma-database-power-database-server`.
 
 ## Uso rápido
 
-Pídele a Kiro que configure una conexión. El agente arma el JSON de `DB_CONNECTIONS` y actualiza `mcp.json`:
+Pídele a Kiro que configure una conexión. El agente arma el JSON de `DB_CONNECTIONS` y lo guarda en la entrada del servidor en `~/.kiro/settings/mcp.json`:
 
 ```text
 Configura una conexión PostgreSQL llamada pg-local en localhost:5432, database my-app, usuario postgres
@@ -61,7 +41,7 @@ Visualiza las relaciones del schema public en pg-local
 
 ## Configuración
 
-Las conexiones van en la variable `DB_CONNECTIONS` de `mcp.json`, como un string JSON con una lista por motor:
+Las conexiones van en la variable `DB_CONNECTIONS` del servidor `power-pragma-database-power-database-server`, en `~/.kiro/settings/mcp.json` dentro de `powers.mcpServers`. Es un string JSON con una lista por motor:
 
 | Motor | Campos | Puerto por defecto |
 |---|---|---|
@@ -85,7 +65,8 @@ Herramientas que expone el servidor MCP:
 ### Seguridad
 
 - El servidor solo acepta consultas que empiezan por `SELECT` o `WITH` y rechaza palabras como `INSERT`, `UPDATE`, `DELETE` o `DROP`. Es un filtro de texto, no una transacción de solo lectura: conéctalo con un usuario de base de datos que solo tenga permisos de lectura.
-- No subas `mcp.json` con contraseñas reales al repositorio.
+- No subas a ningún repositorio un `mcp.json` con contraseñas reales.
+- Cuando actualizas el power (**Check for updates** → **Install updates**), Kiro vuelve a escribir la entrada del servidor desde el `mcp.json` del power y `DB_CONNECTIONS` queda vacío. Guarda una copia de tus conexiones antes de actualizar.
 
 ## Compatibilidad
 
@@ -95,7 +76,7 @@ Herramientas que expone el servidor MCP:
 ## Contribución
 
 1. Crea una rama desde `main`.
-2. Prueba el servidor con `npm install` y `npm start` en `servers/database-mcp-server`, y el power importándolo en Kiro.
+2. Prueba el servidor con `pnpm install` y `pnpm start` en la raíz. Para probar el power sin subir cambios, impórtalo en Kiro con **Import power from a folder** y cambia en su `mcp.json` `npx` por `node` con la ruta a tu `servers/database-mcp-server/index.js`.
 3. Abre un pull request. Lo revisa el Backend Chapter.
 
 Cada PR, cada push a `main` y cada lunes corre el workflow **Security**:
