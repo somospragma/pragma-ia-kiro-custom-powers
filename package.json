@@ -1,0 +1,31 @@
+{
+  "name": "pragma-database-mcp-server",
+  "version": "1.0.0",
+  "description": "Servidor MCP del power Pragma Database Manager para Kiro: PostgreSQL, MySQL y Oracle, solo SELECT.",
+  "license": "Apache-2.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "pragma-database-mcp-server": "servers/database-mcp-server/index.js"
+  },
+  "files": [
+    "servers/database-mcp-server/*.js"
+  ],
+  "scripts": {
+    "start": "node servers/database-mcp-server/index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/somospragma/pragma-ia-kiro-custom-powers.git"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "mysql2": "^3.24.6",
+    "oracledb": "^6.10.0",
+    "pg": "^8.23.1",
+    "zod": "^4.6.7"
+  }
+}
