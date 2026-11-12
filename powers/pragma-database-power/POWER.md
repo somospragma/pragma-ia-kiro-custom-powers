@@ -13,32 +13,34 @@ Conecta y consulta múltiples bases de datos PostgreSQL, MySQL y Oracle desde Ki
 
 ### Paso 1: Instalar el servidor MCP
 
-Este power requiere un servidor MCP externo. Primero, instala las dependencias:
+Este power requiere un servidor MCP externo, que está en este mismo repositorio. Clónalo e instala las dependencias del servidor:
 
 ```bash
-cd database-mcp-server
+git clone https://github.com/somospragma/pragma-ia-kiro-custom-powers.git
+cd pragma-ia-kiro-custom-powers/servers/database-mcp-server
 npm install
 ```
 
 ### Paso 2: Obtener la ruta absoluta del servidor
 
+Desde la misma carpeta `servers/database-mcp-server`:
+
 ```bash
-cd database-mcp-server
 pwd
 ```
 
-Copia la ruta completa que aparece. Ejemplo: `/Users/tu-usuario/projects/database-mcp-server`
+Copia la ruta completa que aparece. Ejemplo: `/Users/tu-usuario/projects/pragma-ia-kiro-custom-powers/servers/database-mcp-server`
 
 ### Paso 3: Configurar el archivo mcp.json
 
-Edita el archivo `mcp.json` en la raíz de este power y reemplaza `/ruta/absoluta/a/database-mcp-server/index.js` con la ruta que copiaste:
+Edita el archivo `mcp.json` en la raíz de este power y reemplaza la ruta de `args` por la que copiaste, terminada en `/index.js`:
 
 ```json
 {
   "mcpServers": {
     "database-server": {
       "command": "node",
-      "args": ["/RUTA/ABSOLUTA/QUE/COPIASTE/index.js"],
+      "args": ["/RUTA/QUE/COPIASTE/index.js"],
       "env": {
         "DB_CONNECTIONS": "{\"postgresql\":[],\"mysql\":[],\"oracle\":[]}"
       }
@@ -202,7 +204,7 @@ Genera un diagrama ASCII de las relaciones entre tablas de un schema.
 - Verifica que el formato JSON de `DB_CONNECTIONS` sea válido (debe estar en una línea)
 
 ### Error: "Cannot find module"
-- Ejecuta `npm install` en la carpeta `database-mcp-server/`
+- Ejecuta `npm install` en la carpeta `servers/database-mcp-server/`
 
 ### Error: "Connection refused"
 - Verifica que la base de datos esté corriendo

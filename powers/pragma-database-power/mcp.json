@@ -1,8 +1,8 @@
 {
   "mcpServers": {
-    "database-servers": {
+    "database-server": {
       "command": "node",
-      "args": ["<RUTAA-ABSOLUTA-REPOSITORIO-MCP-LOCAL>/pragma-ia-kiro-custom-powers/database-mcp-server/index.js"],
+      "args": ["/RUTA/ABSOLUTA/A/pragma-ia-kiro-custom-powers/servers/database-mcp-server/index.js"],
       "env": {
         "DB_CONNECTIONS": "{\"postgresql\":[],\"mysql\":[],\"oracle\":[]}"
       },

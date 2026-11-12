@@ -9,7 +9,7 @@ Esta guía te ayudará a configurar y usar Database Power para conectarte a tus 
 El servidor MCP debe instalarse **fuera** del power:
 
 ```bash
-cd database-mcp-server
+cd pragma-ia-kiro-custom-powers/servers/database-mcp-server
 npm install
 ```
 
@@ -17,13 +17,13 @@ npm install
 
 ```bash
 pwd
-# Ejemplo: /Users/tu-usuario/projects/database-mcp-server
+# Ejemplo: /Users/tu-usuario/projects/pragma-ia-kiro-custom-powers/servers/database-mcp-server
 ```
 
 ### Paso 3: Configurar el power
 
 1. Abre el archivo `mcp.json` en la raíz del power
-2. Reemplaza `/ruta/absoluta/a/database-mcp-server/index.js` con tu ruta real
+2. Reemplaza la ruta de `args` por tu ruta real, terminada en `/index.js`
 3. Edita la variable de entorno `DB_CONNECTIONS` con tus conexiones
 
 ### Ejemplo para PostgreSQL:
@@ -33,7 +33,7 @@ pwd
   "mcpServers": {
     "database-server": {
       "command": "node",
-      "args": ["/Users/tu-usuario/projects/database-mcp-server/index.js"],
+      "args": ["/Users/tu-usuario/projects/pragma-ia-kiro-custom-powers/servers/database-mcp-server/index.js"],
       "env": {
         "DB_CONNECTIONS": "{\"postgresql\":[{\"name\":\"local-dev\",\"host\":\"localhost\",\"port\":5432,\"database\":\"myapp_dev\",\"user\":\"postgres\",\"password\":\"dev123\"}],\"mysql\":[],\"oracle\":[]}"
       }
